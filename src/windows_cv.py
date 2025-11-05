@@ -19,7 +19,7 @@ plt.rcParams.update({
 for model in models:
     for chr in chrs:
         # Load the data
-        a = np.load(f"/data/horse/ws/huel099f-ancestry_task/results/f1_scores_{model}_max_chr{chr}_windows.npy")
+        a = np.load(f"./results/f1_scores_{model}_max_chr{chr}_windows.npy")
         # shape: (n_windows, n_folds) -> make columns=windows for seaborn
         A = a.T  # now shape: (5 folds, 11 windows)
 
@@ -36,7 +36,7 @@ for model in models:
         ax.set_ylabel("F1 score", fontweight="bold")
 
         plt.tight_layout()
-        plt.savefig(f"/data/horse/ws/huel099f-ancestry_task/figures/for_thesis/f1_chr{chr}_windows_{model}.pdf", format="pdf", dpi=300, bbox_inches="tight")
-        plt.savefig(f"/data/horse/ws/huel099f-ancestry_task/figures/for_pres/f1_chr{chr}_windows_{model}.png", format="png", dpi=300, bbox_inches="tight")
+        plt.savefig(f"./figures/for_thesis/f1_chr{chr}_windows_{model}.pdf", format="pdf", dpi=300, bbox_inches="tight")
+        plt.savefig(f"./figures/for_pres/f1_chr{chr}_windows_{model}.png", format="png", dpi=300, bbox_inches="tight")
 
         plt.show()
