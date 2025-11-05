@@ -2,8 +2,10 @@ import sys
 print("python is here ")
 sys.stdout.flush()
 
-sys.path.append("/work/gr-fe/elrashidy/elrashid/hyena-dna" )
-sys.path.append("/work/gr-fe/elrashidy/elrashid/codes/Orthrus")
+# Replace these with your local paths or package locations
+sys.path.append("./libs/hyena-dna")
+sys.path.append("./libs/Orthrus")
+
 import numpy as np
 from itertools import islice
 
@@ -39,7 +41,6 @@ sys.stdout.flush()
 print("libraries are imported")
 sys.stdout.flush()
 
-
 def batch_oh_to_seq(tensor_list):  # List[Tensor]
     base_map = ['A', 'C', 'G', 'T']
     sequences = []
@@ -56,32 +57,27 @@ def batch_oh_to_seq(tensor_list):  # List[Tensor]
 
 ref = Genome("hg38")
 
-human_seq = pd.read_csv("/work/gr-fe/elrashidy/elrashid/data/human-sequences.tsv" , names = ["CHROM" , "START" , "END", "set"] , sep="\t")
-human_seq_chr21 = human_seq[human_seq["CHROM"] == "chr21"]
-human_seq_chr21
-start = human_seq_chr21["START"].min()
-end = human_seq_chr21["END"].max()
-#between start and end generate a random position of start and end that is 5 Mb apart
-np.random.seed(42)
-start = np.random.randint(start, end - 5000000)
-end = start + 500
-print(f"Selected region: {start} to {end}")
+# Replace with your sequence file path
+human_seq = pd.read_csv("./data/human-sequences.tsv" , names = ["CHROM" , "START" , "END", "set"] , sep="\t")
+human_seq_chr21 = human_seq[human_seq["CHROM"] == "chr6"]
 
 
-#start = 28510120
-#start_450 = start + 450000
-#end = 33480577
-gzip_path = "/work/gr-fe/elrashidy/elrashid/data/chr6_MHC.tsv"
-#gzip_path = "/work/gr-fe/elrashidy/elrashid/data/chr21_positions.tsv"
+start = 28510120
+end = 33480577
+
+# Replace with your vcf/gz or positions file path
+gzip_path = "./data/chr6_MHC.tsv"
+#gzip_path = "./data/chr21_positions.tsv"
 from orthrus.newpkldata import SlidingWindowVariantDataset
 
 data = SlidingWindowVariantDataset(
         ref_genome = ref,
-        pkl_dir = "/work/gr-fe/elrashidy/elrashid/data/chr6pkl_positions",
+        # Replace with a local pkl directory for cached positions/windows
+        pkl_dir = "./data/chr6pkl_positions",
         vcf_gz_path = gzip_path, 
         region_start = start,
         region_end = end,
-        window_size = 500
+        window_size = 450000
 )
 
 print("dataset is created")
@@ -119,10 +115,10 @@ for idx, batch in enumerate((train_loader)):
     mat_seq = m
     pat_seq = p
     print("converted to seq")
-    sys.stdout.flush()
+sys.stdout.flush()
     #convert labels to numpy and save as pkl file
     labels = np.array(labels)
-    with open(f"/work/gr-fe/elrashidy/elrashid/data/chr21_labels.pkl", "wb") as f:
+    with open(f"./data/chr21_labels.pkl", "wb") as f:
         pickle.dump(labels, f)
     break
     #for each sample in the batch, get the sequence pass to the model and get the embedding
@@ -137,7 +133,6 @@ for idx, batch in enumerate((train_loader)):
         with torch.inference_mode():
             out_m = model(**tok_mat, output_hidden_states=True, return_dict=True)
             out_p = model(**tok_pat, output_hidden_states=True, return_dict=True)
-
 
             final_hidden_m = out_m.hidden_states[-1]  # [B, L, H]
             final_hidden_p = out_p.hidden_states[-1] # [B, L, H]
@@ -157,37 +152,36 @@ for idx, batch in enumerate((train_loader)):
             full_emb_max = torch.cat([max_emb_m, max_emb_p], dim=-1).squeeze(0).cpu().numpy()
 
             # Save the max embedding    
-            with open(f"/work/gr-fe/elrashidy/elrashid/data/HyenaDNA450k_max_chr21/chr21_individual_{i}_window_{idx}.pkl", "wb") as f:
+            with open(f"./data/HyenaDNA450k_max_chr21/chr21_individual_{i}_window_{idx}.pkl", "wb") as f:
                 pickle.dump(full_emb_max, f)
-            with open(f"/work/gr-fe/elrashidy/elrashid/data/HyenaDNA450k_max_chr21/chr21_mat_individual_{i}_window_{idx}.pkl", "wb") as f:
+            with open(f"./data/HyenaDNA450k_max_chr21/chr21_mat_individual_{i}_window_{idx}.pkl", "wb") as f:
                 pickle.dump(max_emb_m.squeeze(0).cpu().numpy(), f)
-            with open(f"/work/gr-fe/elrashidy/elrashid/data/HyenaDNA450k_max_chr21/chr21_pat_individual_{i}_window_{idx}.pkl", "wb") as f:
+            with open(f"./data/HyenaDNA450k_max_chr21/chr21_pat_individual_{i}_window_{idx}.pkl", "wb") as f:
                 pickle.dump(max_emb_p.squeeze(0).cpu().numpy(), f)
 
             # Concatenate maternal and paternal
             full_emb_mean = torch.cat([mean_emb_m, mean_emb_p], dim=-1).squeeze(0).cpu().numpy()  # [2*H]
             #save the mean embedding
-            with open(f"/work/gr-fe/elrashidy/elrashid/data/HyenaDNA450k_mean_chr21/chr21_individual_{i}_window_{idx}.pkl", "wb") as f:
+            with open(f"./data/HyenaDNA450k_mean_chr21/chr21_individual_{i}_window_{idx}.pkl", "wb") as f:
                 pickle.dump(full_emb_mean, f)
-            with open(f"/work/gr-fe/elrashidy/elrashid/data/HyenaDNA450k_mean_chr21/chr21_mat_individual_{i}_window_{idx}.pkl", "wb") as f:
+            with open(f"./data/HyenaDNA450k_mean_chr21/chr21_mat_individual_{i}_window_{idx}.pkl", "wb") as f:
                 pickle.dump(mean_emb_m.squeeze(0).cpu().numpy(), f)
-            with open(f"/work/gr-fe/elrashidy/elrashid/data/HyenaDNA450k_mean_chr21/chr21_pat_individual_{i}_window_{idx}.pkl", "wb") as f:
+            with open(f"./data/HyenaDNA450k_mean_chr21/chr21_pat_individual_{i}_window_{idx}.pkl", "wb") as f:
                 pickle.dump(mean_emb_p.squeeze(0).cpu().numpy(), f)
             # Concatenate maternal and paternal
             full_emb_last= torch.cat([last_emb_m, last_emb_p], dim=-1).squeeze(0).cpu().numpy()  # [2*H]
 
             #save the last embedding
-            with open(f"/work/gr-fe/elrashidy/elrashid/data/HyenaDNA450k_last_chr21/chr21_individual_{i}_window_{idx}.pkl", "wb") as f:
+            with open(f"./data/HyenaDNA450k_last_chr21/chr21_individual_{i}_window_{idx}.pkl", "wb") as f:
                 pickle.dump(full_emb_last, f)
-            with open(f"/work/gr-fe/elrashidy/elrashid/data/HyenaDNA450k_last_chr21/chr21_mat_individual_{i}_window_{idx}.pkl", "wb") as f:
+            with open(f"./data/HyenaDNA450k_last_chr21/chr21_mat_individual_{i}_window_{idx}.pkl", "wb") as f:
                 pickle.dump(last_emb_m.squeeze(0).cpu().numpy(), f)
-            with open(f"/work/gr-fe/elrashidy/elrashid/data/HyenaDNA450k_last_chr21/chr21_pat_individual_{i}_window_{idx}.pkl", "wb") as f:
+            with open(f"./data/HyenaDNA450k_last_chr21/chr21_pat_individual_{i}_window_{idx}.pkl", "wb") as f:
                 pickle.dump(last_emb_p.squeeze(0).cpu().numpy(), f)
-                
+            
             del tok_mat, tok_pat
             del out_m, out_p
             del final_hidden_m, final_hidden_p
             del max_emb_m, max_emb_p, mean_emb_m, mean_emb_p, last_emb_m, last_emb_p
             del full_emb_max, full_emb_mean, full_emb_last
             torch.cuda.empty_cache()
-
