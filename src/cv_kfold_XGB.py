@@ -49,9 +49,9 @@ def parse_embedding_type(et: str) -> pd.Series:
 
 # ------------------ Main plotting ------------------
 for chr_num in chrs:
-    csv_path = f"./results/results_chr{chr_num}_XGB_all_types_filtering_True_var1e-05_corr1_xgbparams.csv"
-    out_pdf = f"./figures/for_thesis/chr{chr_num}_XGB_True_var1e-05_corr1_xgbparams.pdf"
-    out_png = f"./figures/for_pres/chr{chr_num}_XGB_True_var1e-05_corr1_xgbparams.png"
+    csv_path = f"./results/results_chr{chr_num}_XGB_all_types_xgbparams.csv"
+    out_pdf = f"./figures/for_thesis/chr{chr_num}_XGB_all_types_xgbparams.pdf"
+    out_png = f"./figures/for_pres/chr{chr_num}_XGB_all_types_xgbparams.png"
     os.makedirs(os.path.dirname(out_pdf), exist_ok=True)
     os.makedirs(os.path.dirname(out_png), exist_ok=True)
 
