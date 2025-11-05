@@ -29,3 +29,4 @@ This directory contains scripts supporting the main experiments and figures.
 - **Fig_gen**  
   Scripts for figure generation. Each figure from the paper can be reproduced using CSV outputs from the `./results` folder.
 
+- In addition to windows_to_genes.py, that we used to look for the genes existing in the top performing windows.
