@@ -71,13 +71,13 @@ print(f"Selected region: {start} to {end}")
 #start = 28510120
 #start_450 = start + 450000
 #end = 33480577
-#gzip_path = "/work/gr-fe/elrashidy/elrashid/data/chr6_MHC.tsv"
-gzip_path = "/work/gr-fe/elrashidy/elrashid/data/chr21_positions.tsv"
+gzip_path = "/work/gr-fe/elrashidy/elrashid/data/chr6_MHC.tsv"
+#gzip_path = "/work/gr-fe/elrashidy/elrashid/data/chr21_positions.tsv"
 from orthrus.newpkldata import SlidingWindowVariantDataset
 
 data = SlidingWindowVariantDataset(
         ref_genome = ref,
-        pkl_dir = "/work/gr-fe/elrashidy/elrashid/data/chr21pkl_positions",
+        pkl_dir = "/work/gr-fe/elrashidy/elrashid/data/chr6pkl_positions",
         vcf_gz_path = gzip_path, 
         region_start = start,
         region_end = end,
