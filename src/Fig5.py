@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-chrs = [21]
+chrs = [6]
 models = ["XGB" ]
 
 sns.set_theme(style="whitegrid", context="paper")
