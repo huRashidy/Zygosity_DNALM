@@ -11,8 +11,7 @@ Common placeholder examples used across scripts:
 
 Recommended steps:
 1. Replace all occurrences of absolute or placeholder paths in scripts with your real paths (either absolute paths or project-relative paths).
-2. Prefer using a single configurable variable (e.g., BASE_DATA_DIR or DATA_DIR) or argparse flags so paths are easy to update in one place.
-3. Verify file names and extensions (for example, .pkl, .npy) match your local data files.
+2. Verify file names and extensions (for example, .pkl, .npy) match your local data files.
 
 # Source Code Organization
 
@@ -21,10 +20,10 @@ This directory contains scripts supporting the main experiments and figures.
 ## Folders
 
 - **train_head**  
-  Stratified 5-fold cross-validation code to train the XGBoost classification head using either full MHC region embeddings (all 11 windows) or the top 4 performing windows only.
+  Stratified 5-fold cross-validation code to train the XGBoost classification head using either full MHC region embeddings (all 11 windows), the top 4 performing windows only, or each window seperately for max aggregation embedding. 
 
 - **embeddings**  
-  Code for generating embeddings for the 11 MHC windows (450 kb) of 2,548 individuals from the 1000 Genomes Project. Haplotypes are assigned by applying mutations from VCF files using the Genome kit library.
+  Code for generating embeddings using HyenaDNA for the 11 MHC windows (450 kb) of 2,548 individuals from the 1000 Genomes Project. Haplotypes are assigned by applying mutations from VCF files using the Genome kit library.
 
 - **Fig_gen**  
   Scripts for figure generation. Each figure from the paper can be reproduced using CSV outputs from the `./results` folder.
