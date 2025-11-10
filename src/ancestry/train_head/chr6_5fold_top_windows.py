@@ -124,7 +124,7 @@ def cross_validate_model(X, y, model, n_splits=5):
     return all_fold_metrics
 
 def save_results_to_csv(results_dict, model_name, chr_name, data_type,
-                        results_dir="/data/horse/ws/huel099f-ancestry_task/results"
+                        results_dir="./data/results"
                         ):
     """
     Save aggregated CV results to a CSV in a consistent directory.
@@ -171,9 +171,9 @@ def main_refined(chromosome, model_name):
 
     # Load labels once
     if chromosome == 6:
-        with open("/data/horse/ws/huel099f-ancestry_task/data/chr6/chr6_labels_HLA_252.pkl", "rb") as f:
+        with open("./data/chr6/chr6_labels_HLA_252.pkl", "rb") as f:
             labels_252 = pickle.load(f)
-        with open("/data/horse/ws/huel099f-ancestry_task/data/chr6/chr6_labels_HLA_2296.pkl", "rb") as f:
+        with open("./data/chr6/chr6_labels_HLA_2296.pkl", "rb") as f:
             labels_2296 = pickle.load(f)
         labels_all = np.concatenate((labels_252, labels_2296), axis=0)
 
@@ -185,17 +185,17 @@ def main_refined(chromosome, model_name):
         sys.stdout.flush()
 
         if chromosome == 6:
-            with open(f"/data/horse/ws/huel099f-ancestry_task/data/chr6/HyenaDNA450k_{emb}_252/chr6_{emb}_embeddings.pkl", "rb") as f:
+            with open(f"./data/chr6/HyenaDNA450k_{emb}_252/chr6_{emb}_embeddings.pkl", "rb") as f:
                 all_252 = pickle.load(f)
-            with open(f"/data/horse/ws/huel099f-ancestry_task/data/chr6/HyenaDNA450k_{emb}_2296_concat/chr6_{emb}_embeddings.pkl", "rb") as f:
+            with open(f"./data/chr6/HyenaDNA450k_{emb}_2296_concat/chr6_{emb}_embeddings.pkl", "rb") as f:
                 all_2296 = pickle.load(f)
-            with open(f"/data/horse/ws/huel099f-ancestry_task/data/chr6/HyenaDNA450k_{emb}_252/chr6_mat_{emb}_embeddings.pkl", "rb") as f:
+            with open(f"./data/chr6/HyenaDNA450k_{emb}_252/chr6_mat_{emb}_embeddings.pkl", "rb") as f:
                 ind_mat_252 = pickle.load(f)
-            with open(f"/data/horse/ws/huel099f-ancestry_task/data/chr6/HyenaDNA450k_{emb}_2296_concat/chr6_mat_{emb}_embeddings.pkl", "rb") as f:
+            with open(f"./data/chr6/HyenaDNA450k_{emb}_2296_concat/chr6_mat_{emb}_embeddings.pkl", "rb") as f:
                 ind_mat_2296 = pickle.load(f)
-            with open(f"/data/horse/ws/huel099f-ancestry_task/data/chr6/HyenaDNA450k_{emb}_252/chr6_pat_{emb}_embeddings.pkl", "rb") as f:
+            with open(f"./data/chr6/HyenaDNA450k_{emb}_252/chr6_pat_{emb}_embeddings.pkl", "rb") as f:
                 ind_pat_252 = pickle.load(f)
-            with open(f"/data/horse/ws/huel099f-ancestry_task/data/chr6/HyenaDNA450k_{emb}_2296_concat/chr6_pat_{emb}_embeddings.pkl", "rb") as f:
+            with open(f"./data/chr6/HyenaDNA450k_{emb}_2296_concat/chr6_pat_{emb}_embeddings.pkl", "rb") as f:
                 ind_pat_2296 = pickle.load(f)
 
             ind_all = np.concatenate((all_252, all_2296), axis=0)
