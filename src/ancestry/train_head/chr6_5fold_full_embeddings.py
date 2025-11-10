@@ -117,17 +117,10 @@ def cross_validate_model(X, y, model, n_splits=5):
         X_train, X_val = individual_vectors[train_idx], individual_vectors[val_idx]
         y_train, y_val = y[train_idx], y[val_idx]
 
-        # --- NEW: compute balanced per-sample weights on the TRAIN fold ---
-        classes = np.unique(y_train)
-        cw = compute_class_weight(class_weight="balanced", classes=classes, y=y_train)
-        wmap = dict(zip(classes, cw))
-        sample_weight_train = np.asarray([wmap[yi] for yi in y_train])
-
         y_onehot_train = onehot.fit_transform(y_train.reshape(-1, 1))
         y_onehot_val = onehot.transform(y_val.reshape(-1, 1))
 
-        # Fit with weights
-        model.fit(X_train, y_train, sample_weight=sample_weight_train)
+        model.fit(X_train, y_train)
 
         y_pred = model.predict(X_val)
         y_prob = model.predict_proba(X_val) if hasattr(model, "predict_proba") else np.eye(len(np.unique(y)))[y_pred]
@@ -144,7 +137,7 @@ def cross_validate_model(X, y, model, n_splits=5):
     return all_fold_metrics
 
 def save_results_to_csv(results_dict, model_name, chr_name, data_type,
-                        results_dir="/data/horse/ws/huel099f-ancestry_task/results",
+                        results_dir="./data/results",
                         filtering=False, var_thresh=0.0001, corr_thresh=0.9):
     """
     Save aggregated CV results to a CSV in a consistent directory.
@@ -164,9 +157,9 @@ def save_results_to_csv(results_dict, model_name, chr_name, data_type,
         return None  # nothing to save
 
     if filtering:
-        fname = f"results_chr{chr_name}_{model_name}_{data_type}_filtering_True_var{var_thresh}_corr{corr_thresh}_xgbparams_weighted.csv"
+        fname = f"results_chr{chr_name}_{model_name}_{data_type}_filtering_True_var{var_thresh}_corr{corr_thresh}_xgbparams.csv"
     else:
-        fname = f"results_chr{chr_name}_{model_name}_{data_type}_xgbparams_weighted.csv"
+        fname = f"results_chr{chr_name}_{model_name}_{data_type}_xgbparams.csv"
 
     out_path = os.path.join(results_dir, fname)
     pd.DataFrame(records).to_csv(out_path, index=False)
@@ -200,12 +193,12 @@ def main_refined(chromosome, model_name):
 
     # Load labels once
     if chromosome == 21:
-        with open(f"/data/horse/ws/huel099f-ancestry_task/data/chr21/chr21_labels_All.pkl", "rb") as f:
+        with open(f"./data/chr21/chr21_labels_All.pkl", "rb") as f:
             labels_all = pickle.load(f)
     elif chromosome == 6:
-        with open("/data/horse/ws/huel099f-ancestry_task/data/chr6/chr6_labels_HLA_252.pkl", "rb") as f:
+        with open("./data/chr6/chr6_labels_HLA_252.pkl", "rb") as f:
             labels_252 = pickle.load(f)
-        with open("/data/horse/ws/huel099f-ancestry_task/data/chr6/chr6_labels_HLA_2296.pkl", "rb") as f:
+        with open("./data/chr6/chr6_labels_HLA_2296.pkl", "rb") as f:
             labels_2296 = pickle.load(f)
         labels_all = np.concatenate((labels_252, labels_2296), axis=0)
 
@@ -217,25 +210,25 @@ def main_refined(chromosome, model_name):
         sys.stdout.flush()
 
         if chromosome == 21:
-            with open(f"/data/horse/ws/huel099f-ancestry_task/data/chr21/HyenaDNA450k_{emb}_chr21_concat/chr21_{emb}_embeddings.pkl", "rb") as f:
+            with open(f"./data/chr21/HyenaDNA450k_{emb}_chr21_concat/chr21_{emb}_embeddings.pkl", "rb") as f:
                 ind_all = pickle.load(f)
-            with open(f"/data/horse/ws/huel099f-ancestry_task/data/chr21/HyenaDNA450k_{emb}_chr21_concat/chr21_mat_{emb}_embeddings.pkl", "rb") as f:
+            with open(f"./data/chr21/HyenaDNA450k_{emb}_chr21_concat/chr21_mat_{emb}_embeddings.pkl", "rb") as f:
                 ind_mat = pickle.load(f)
-            with open(f"/data/horse/ws/huel099f-ancestry_task/data/chr21/HyenaDNA450k_{emb}_chr21_concat/chr21_pat_{emb}_embeddings.pkl", "rb") as f:
+            with open(f"./data/chr21/HyenaDNA450k_{emb}_chr21_concat/chr21_pat_{emb}_embeddings.pkl", "rb") as f:
                 ind_pat = pickle.load(f)
 
         elif chromosome == 6:
-            with open(f"/data/horse/ws/huel099f-ancestry_task/data/chr6/HyenaDNA450k_{emb}_252/chr6_{emb}_embeddings.pkl", "rb") as f:
+            with open(f"./data/chr6/HyenaDNA450k_{emb}_252/chr6_{emb}_embeddings.pkl", "rb") as f:
                 all_252 = pickle.load(f)
-            with open(f"/data/horse/ws/huel099f-ancestry_task/data/chr6/HyenaDNA450k_{emb}_2296_concat/chr6_{emb}_embeddings.pkl", "rb") as f:
+            with open(f"./data/chr6/HyenaDNA450k_{emb}_2296_concat/chr6_{emb}_embeddings.pkl", "rb") as f:
                 all_2296 = pickle.load(f)
-            with open(f"/data/horse/ws/huel099f-ancestry_task/data/chr6/HyenaDNA450k_{emb}_252/chr6_mat_{emb}_embeddings.pkl", "rb") as f:
+            with open(f"./data/chr6/HyenaDNA450k_{emb}_252/chr6_mat_{emb}_embeddings.pkl", "rb") as f:
                 ind_mat_252 = pickle.load(f)
-            with open(f"/data/horse/ws/huel099f-ancestry_task/data/chr6/HyenaDNA450k_{emb}_2296_concat/chr6_mat_{emb}_embeddings.pkl", "rb") as f:
+            with open(f"./data/chr6/HyenaDNA450k_{emb}_2296_concat/chr6_mat_{emb}_embeddings.pkl", "rb") as f:
                 ind_mat_2296 = pickle.load(f)
-            with open(f"/data/horse/ws/huel099f-ancestry_task/data/chr6/HyenaDNA450k_{emb}_252/chr6_pat_{emb}_embeddings.pkl", "rb") as f:
+            with open(f"./data/chr6/HyenaDNA450k_{emb}_252/chr6_pat_{emb}_embeddings.pkl", "rb") as f:
                 ind_pat_252 = pickle.load(f)
-            with open(f"/data/horse/ws/huel099f-ancestry_task/data/chr6/HyenaDNA450k_{emb}_2296_concat/chr6_pat_{emb}_embeddings.pkl", "rb") as f:
+            with open(f"./data/chr6/HyenaDNA450k_{emb}_2296_concat/chr6_pat_{emb}_embeddings.pkl", "rb") as f:
                 ind_pat_2296 = pickle.load(f)
 
             ind_all = np.concatenate((all_252, all_2296), axis=0)
