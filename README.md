@@ -15,7 +15,6 @@ Zygosity-aware DNA language models leverage both haplotypes to improve ancestry 
 Zygosity_DNALM/
 ├── src/            # Source code and model implementations
 ├── results/        # Output results and predictions
-├── test/           # Test files and test data
 └── README.md       # This file
 ```
 
