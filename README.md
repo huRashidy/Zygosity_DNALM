@@ -41,9 +41,11 @@ Follow these steps to set up your environment, download the data, and run the tr
 
 1. Clone the Repository
 bash
-` git clone https://github.com/huRashidy/Zygosity_DNALM.git`
+```
+git clone https://github.com/huRashidy/Zygosity_DNALM.git`
 cd Zygosity_DNALM
-2. Download the Data from Zenodo
+```
+3. Download the Data from Zenodo
 The full data archive (including all embeddings, .csv/.npy files, etc.) is available via Zenodo, with the link https://zenodo.org/records/17533617 .
 
 a. Manual download:
@@ -55,16 +57,20 @@ You can use wget if a direct download link is available, or zenodo-get if prefer
 Example using wget (replace with the actual Zenodo download link and filename):
 
 bash
-`wget https://zenodo.org/records/17533617/files/chr6.rar`
-
+```
+wget https://zenodo.org/records/17533617/files/chr6.rar`
+```
 c. Extract the archive
 Move the downloaded archive into your project directory and unpack:
 
 bash
+```
 mkdir data
 # If .rar (install unrar if needed)
-`unrar x chr6.rar data/
-unrar x results.rar data/`
+unrar x chr6.rar data/
+unrar x results.rar data/
+
+```
 All extracted data files must be placed in the data subfolder at the root of the repo.
 
 3. Install Required Python Dependencies
