@@ -87,14 +87,14 @@ def predict_by_window(embeddings_all, y, method="WLR"):
         f1_scores_all.append(f1_window)
     return np.array(f1_scores_all)
 
-def main_refined_windows(chromosome, model_name):
+def main_refined_windows(chromosome, model_name, data_dir="./data", results_dir="./data/results"):
     if chromosome == 21:
-        with open(f"./data/chr21/chr21_labels_All.pkl", "rb") as f:
+        with open(f"{data_dir}/chr21/chr21_labels_All.pkl", "rb") as f:
             labels_all = pickle.load(f)
     elif chromosome == 6:
-        with open("./data/chr6/chr6_labels_HLA_252.pkl", "rb") as f:
+        with open(f"{data_dir}/chr6/chr6_labels_HLA_252.pkl", "rb") as f:
             labels_252 = pickle.load(f)
-        with open("./data/chr6/chr6_labels_HLA_2296.pkl", "rb") as f:
+        with open(f"{data_dir}/chr6/chr6_labels_HLA_2296.pkl", "rb") as f:
             labels_2296 = pickle.load(f)
         labels_all = np.concatenate((labels_252, labels_2296), axis=0)
     y = np.squeeze(labels_all, axis=1) if labels_all.ndim > 1 else labels_all
@@ -104,7 +104,7 @@ def main_refined_windows(chromosome, model_name):
         print(f"Loading {emb} embeddings for chromosome {chromosome}")
         if chromosome == 21:
             print("Processing chromosome 21")
-            with open(f"./data/chr21/HyenaDNA450k_{emb}_chr21_concat/chr21_{emb}_embeddings.pkl", "rb") as f:
+            with open(f"{data_dir}/chr21/HyenaDNA450k_{emb}_chr21_concat/chr21_{emb}_embeddings.pkl", "rb") as f:
                 ind_all = pickle.load(f)
             sys.stdout.flush()
 
@@ -113,10 +113,10 @@ def main_refined_windows(chromosome, model_name):
             print("Processing chromosome 6")
             sys.stdout.flush()
 
-            with open(f"./data/chr6/HyenaDNA450k_{emb}_252/chr6_{emb}_embeddings.pkl", "rb") as f:
+            with open(f"{data_dir}/chr6/HyenaDNA450k_{emb}_252/chr6_{emb}_embeddings.pkl", "rb") as f:
                 all_252 = pickle.load(f)
 
-            with open(f"./data/chr6/HyenaDNA450k_{emb}_2296_concat/chr6_{emb}_embeddings.pkl", "rb") as f:
+            with open(f"{data_dir}/chr6/HyenaDNA450k_{emb}_2296_concat/chr6_{emb}_embeddings.pkl", "rb") as f:
                 all_2296 = pickle.load(f)
             ind_all = np.concatenate((all_252, all_2296), axis=0)
 
@@ -125,7 +125,7 @@ def main_refined_windows(chromosome, model_name):
         sys.stdout.flush()
 
         f1_scores = predict_by_window(ind_all, y, method=model_name)
-        np.save(f"./data/results/f1_scores_{model_name}_{emb}_chr{chromosome}_windows.npy", f1_scores)
+        np.save(f"{results_dir}/f1_scores_{model_name}_{emb}_chr{chromosome}_windows.npy", f1_scores)
         del ind_all, f1_scores
         gc.collect()
 
@@ -133,5 +133,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run per-window training with low memory usage")
     parser.add_argument('--chr', type=int, required=True, choices=[6], help='Chromosome number')
     parser.add_argument('--model', type=str, required=True, choices=['XGB'], help='Model type')
+    parser.add_argument('--data-dir', type=str, default='./data', help='Base directory for input data (default: ./data)')
+    parser.add_argument('--results-dir', type=str, default='./data/results', help='Directory for output results (default: ./data/results)')
     args = parser.parse_args()
-    main_refined_windows(args.chr, args.model)
+    main_refined_windows(args.chr, args.model, args.data_dir, args.results_dir)

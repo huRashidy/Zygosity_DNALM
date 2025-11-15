@@ -165,15 +165,15 @@ def main_cv(X_dict, y, chr_name, method="WLR", filtering=False, var_thresh=0.000
     return results
 
 
-def main_refined(chromosome, model_name):
+def main_refined(chromosome, model_name, data_dir="./data", results_dir="./data/results"):
     emb_types = ["last", "mean", "max"]
     all_results = {}
 
     # Load labels once
     if chromosome == 6:
-        with open("./data/chr6/chr6_labels_HLA_252.pkl", "rb") as f:
+        with open(f"{data_dir}/chr6/chr6_labels_HLA_252.pkl", "rb") as f:
             labels_252 = pickle.load(f)
-        with open("./data/chr6/chr6_labels_HLA_2296.pkl", "rb") as f:
+        with open(f"{data_dir}/chr6/chr6_labels_HLA_2296.pkl", "rb") as f:
             labels_2296 = pickle.load(f)
         labels_all = np.concatenate((labels_252, labels_2296), axis=0)
 
@@ -185,17 +185,17 @@ def main_refined(chromosome, model_name):
         sys.stdout.flush()
 
         if chromosome == 6:
-            with open(f"./data/chr6/HyenaDNA450k_{emb}_252/chr6_{emb}_embeddings.pkl", "rb") as f:
+            with open(f"{data_dir}/chr6/HyenaDNA450k_{emb}_252/chr6_{emb}_embeddings.pkl", "rb") as f:
                 all_252 = pickle.load(f)
-            with open(f"./data/chr6/HyenaDNA450k_{emb}_2296_concat/chr6_{emb}_embeddings.pkl", "rb") as f:
+            with open(f"{data_dir}/chr6/HyenaDNA450k_{emb}_2296_concat/chr6_{emb}_embeddings.pkl", "rb") as f:
                 all_2296 = pickle.load(f)
-            with open(f"./data/chr6/HyenaDNA450k_{emb}_252/chr6_mat_{emb}_embeddings.pkl", "rb") as f:
+            with open(f"{data_dir}/chr6/HyenaDNA450k_{emb}_252/chr6_mat_{emb}_embeddings.pkl", "rb") as f:
                 ind_mat_252 = pickle.load(f)
-            with open(f"./data/chr6/HyenaDNA450k_{emb}_2296_concat/chr6_mat_{emb}_embeddings.pkl", "rb") as f:
+            with open(f"{data_dir}/chr6/HyenaDNA450k_{emb}_2296_concat/chr6_mat_{emb}_embeddings.pkl", "rb") as f:
                 ind_mat_2296 = pickle.load(f)
-            with open(f"./data/chr6/HyenaDNA450k_{emb}_252/chr6_pat_{emb}_embeddings.pkl", "rb") as f:
+            with open(f"{data_dir}/chr6/HyenaDNA450k_{emb}_252/chr6_pat_{emb}_embeddings.pkl", "rb") as f:
                 ind_pat_252 = pickle.load(f)
-            with open(f"./data/chr6/HyenaDNA450k_{emb}_2296_concat/chr6_pat_{emb}_embeddings.pkl", "rb") as f:
+            with open(f"{data_dir}/chr6/HyenaDNA450k_{emb}_2296_concat/chr6_pat_{emb}_embeddings.pkl", "rb") as f:
                 ind_pat_2296 = pickle.load(f)
 
             ind_all = np.concatenate((all_252, all_2296), axis=0)
@@ -219,7 +219,7 @@ def main_refined(chromosome, model_name):
         gc.collect()
 
     # Save all in one CSV
-    save_results_to_csv(all_results, model_name, str(chromosome), "all_types")
+    save_results_to_csv(all_results, model_name, str(chromosome), "all_types", results_dir=results_dir)
     print(f"Results saved for chromosome {chromosome} with model {model_name}") 
 
 if __name__ == "__main__":
@@ -227,5 +227,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run refined main CV")
     parser.add_argument('--chr', type=int, required=True, choices=[6], help='Chromosome number')
     parser.add_argument('--model', type=str, required=True, choices=['SVC', 'WLR', 'XGB'], help='Model type')
+    parser.add_argument('--data-dir', type=str, default='./data', help='Base directory for input data (default: ./data)')
+    parser.add_argument('--results-dir', type=str, default='./data/results', help='Directory for output results (default: ./data/results)')
     args = parser.parse_args()
-    main_refined(args.chr, args.model)
+    main_refined(args.chr, args.model, args.data_dir, args.results_dir)
