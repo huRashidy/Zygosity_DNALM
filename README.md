@@ -78,8 +78,17 @@ Make sure you replace the './' in all "./data/results" paths is replaced with th
 Ensure you are using Python 3.8+ and run:
 
 bash
+```
 pip install -r requirements.txt
+```
 
+3. If you want to train the classification head
+```
+cd train_head
+python chr6_5fold_full_embeddings.py --chr 6 --model 'XGB'
+##In case you want the results per window
+python chr6_5fold_per_window --chr 6 --model 'XGB'
+```
 
 ## Citation
 Here is the citation if you like our work.
