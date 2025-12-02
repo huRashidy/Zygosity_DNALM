@@ -72,6 +72,7 @@ unrar x results.rar data/
 
 ```
 All extracted data files must be placed in the data subfolder at the root of the repo.
+Make sure you replace the './' in all "./data/results" paths is replaced with the root directory.
 
 2. Install Required Python Dependencies
 Ensure you are using Python 3.8+ and run:
@@ -79,20 +80,23 @@ Ensure you are using Python 3.8+ and run:
 bash
 pip install -r requirements.txt
 
-### Prerequisites
-- Matplotlib
-- Seaborn
-- pandas
-- Numpy
-- xgboost
-- scikit-learn
-```
 
-3. 
 ## Citation
-
-If you use this code in your research, please cite the corresponding paper (to be added).
-
+Here is the citation if you like our work.
+```
+@article {El Rashidy2025.11.19.689326,
+	author = {El Rashidy, Hussin and Saadat, Ali and Fellay, Jacques},
+	title = {Zygosity-Aware DNA Language Modeling Improves Ancestry and Gene Expression Prediction},
+	elocation-id = {2025.11.19.689326},
+	year = {2025},
+	doi = {10.1101/2025.11.19.689326},
+	publisher = {Cold Spring Harbor Laboratory},
+	abstract = {DNA language models (DNA-LMs) are transforming how genomic sequence information is represented and interpreted. Yet most current approaches treat DNA as a single sequence, overlooking the diploid structure and zygosity information that distinguish the two parental copies of the genome. Here, we systematically evaluate explicit diploid, zygosity-aware representations in DNA-LMs for two downstream tasks: ancestry classification and gene expression prediction. For ancestry, we use HyenaDNA embeddings of the extended MHC region and show that concatenating maternal and paternal haplotype embeddings consistently improves predictive performance across five superpopulations compared to single-haplotype inputs. For gene expression, we compare convolutional neural networks (CNNs) trained from scratch with Nucleotide Transformer models using reference-only, single-copy, and two-copy (zygosity-aware) sequence encodings. CNNs showed increased performance by incorporating genetic variation and zygosity via simple additive genotype encoding, whereas na{\"\i}vely injecting variation into pretrained Nucleotide Transformer models yields mixed effects, highlighting a mismatch between current pretraining objectives and variation-sensitive prediction. Together, our results demonstrate that zygosity-aware representations can capture biologically meaningful information beyond reference-only views and underscore the need for diploid- and population-aware pretraining strategies in future DNA-LMs for variant interpretation and precision medicine.Competing Interest StatementThe authors have declared no competing interest.},
+	URL = {https://www.biorxiv.org/content/early/2025/11/20/2025.11.19.689326},
+	eprint = {https://www.biorxiv.org/content/early/2025/11/20/2025.11.19.689326.full.pdf},
+	journal = {bioRxiv}
+}
+```
 ## License
 
 License information to be added.
