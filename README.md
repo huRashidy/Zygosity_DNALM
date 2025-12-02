@@ -73,7 +73,7 @@ unrar x results.rar data/
 ```
 All extracted data files must be placed in the data subfolder at the root of the repo.
 
-3. Install Required Python Dependencies
+2. Install Required Python Dependencies
 Ensure you are using Python 3.8+ and run:
 
 bash
@@ -87,6 +87,8 @@ pip install -r requirements.txt
 - xgboost
 - scikit-learn
 ```
+
+3. 
 ## Citation
 
 If you use this code in your research, please cite the corresponding paper (to be added).
